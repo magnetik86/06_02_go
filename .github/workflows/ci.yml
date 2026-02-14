@@ -25,7 +25,7 @@ jobs:
         run: |
           ./dummy-server.bin &
           sleep 5
-          curl http://localhost:8080
+          curl http://localhost:8888
           kill $!
 
       - name: Upload Artifact
