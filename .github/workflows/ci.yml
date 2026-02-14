@@ -1,3 +1,4 @@
+cat <<EOF > .github/workflows/ci.yml
 name: Go CI
 
 on: [push]
@@ -15,17 +16,21 @@ jobs:
           go-version: 'stable'
 
       - name: Build
-        run: go build -o dummy-server.bin ./
+        # Собираем бинарник из папки cmd
+        run: go build -o dummy-server.bin ./cmd
 
       - name: Test
+        # Запускаем сервер в фоне, ждем и проверяем через curl
         run: |
           ./dummy-server.bin &
           sleep 5
           curl http://localhost:8080
-          kill $!
+          kill \$!
 
       - name: Upload Artifact
+        # Сохраняем результат сборки как артефакт GitHub Actions
         uses: actions/upload-artifact@v4
         with:
           name: dummy-server-binary
           path: dummy-server.bin
+EOF
